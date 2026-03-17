@@ -1,0 +1,14 @@
+id: H000005
+slug: go-nogo
+title: Go/No-Go Task
+acquisition: behavior
+variant: html
+cognitive_domain:
+  - inhibitory_control
+  - response_selection
+maturity: prototype
+version:
+  release_tag: "0.1.0"
+contracts:
+  psyflow_web_taps: v0.1.0
+maintainer: []

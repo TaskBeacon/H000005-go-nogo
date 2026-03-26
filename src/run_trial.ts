@@ -104,5 +104,16 @@ export function run_trial(
       .to_dict();
   }
 
+  trial.finalize((snapshot, _runtime, helpers) => {
+    if (condition_id === "go") {
+      helpers.setTrialState("go_correct", Boolean(snapshot.units.go?.hit));
+      return;
+    }
+
+    const nogoFalseAlarm = Boolean(snapshot.units.nogo?.hit);
+    helpers.setTrialState("nogo_false_alarm", nogoFalseAlarm);
+    helpers.setTrialState("nogo_correct", !nogoFalseAlarm);
+  });
+
   return trial;
 }

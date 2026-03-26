@@ -8,11 +8,11 @@ export function summarizeBlock(
   const goRows = blockRows.filter((row) => row.condition === "go");
   const nogoRows = blockRows.filter((row) => row.condition === "nogo");
 
-  const goHits = goRows.filter((row) => row.go_hit === true);
-  const nogoCorrect = nogoRows.filter((row) => row.nogo_hit === false);
+  const goCorrect = goRows.filter((row) => Boolean(row.go_correct ?? row.go_hit));
+  const nogoCorrect = nogoRows.filter((row) => Boolean(row.nogo_correct ?? (row.nogo_hit === false)));
 
   return {
-    go_accuracy: goRows.length > 0 ? goHits.length / goRows.length : 0,
+    go_accuracy: goRows.length > 0 ? goCorrect.length / goRows.length : 0,
     nogo_accuracy: nogoRows.length > 0 ? nogoCorrect.length / nogoRows.length : 0
   };
 }

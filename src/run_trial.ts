@@ -64,12 +64,26 @@ export function run_trial(
       })
       .to_dict();
 
-    trial
+    const feedbackUnit = trial
       .unit("no_response_feedback")
       .when((snapshot: TrialSnapshot) => !Boolean(snapshot.units.go?.response))
-      .addStim(stimBank.get("no_response_feedback"))
-      .show({ duration: Number(settings.no_response_feedback_duration ?? 0.8) })
-      .to_dict();
+      .addStim(stimBank.get("no_response_feedback"));
+    set_trial_context(feedbackUnit, {
+      trial_id: trial.trial_id,
+      phase: "no_response_feedback",
+      deadline_s: Number(settings.no_response_feedback_duration ?? 0.8),
+      valid_keys: [],
+      block_id,
+      condition_id,
+      task_factors: {
+        condition: condition_id,
+        stage: "no_response_feedback",
+        response: false,
+        block_idx
+      },
+      stim_id: "no_response_feedback"
+    });
+    feedbackUnit.show({ duration: Number(settings.no_response_feedback_duration ?? 0.8) }).to_dict();
   } else {
     const nogoUnit = trial.unit("nogo").addStim(stimBank.get("nogo"));
     set_trial_context(nogoUnit, {
@@ -96,12 +110,27 @@ export function run_trial(
       })
       .to_dict();
 
-    trial
+    const feedbackUnit = trial
       .unit("nogo_error_feedback")
       .when((snapshot: TrialSnapshot) => Boolean(snapshot.units.nogo?.response))
-      .addStim(stimBank.get("nogo_error_feedback"))
-      .show({ duration: Number(settings.nogo_error_feedback_duration ?? 0.8) })
-      .to_dict();
+      .addStim(stimBank.get("nogo_error_feedback"));
+    set_trial_context(feedbackUnit, {
+      trial_id: trial.trial_id,
+      phase: "nogo_error_feedback",
+      deadline_s: Number(settings.nogo_error_feedback_duration ?? 0.8),
+      valid_keys: [],
+      block_id,
+      condition_id,
+      task_factors: {
+        condition: condition_id,
+        stage: "nogo_error_feedback",
+        response: true,
+        false_alarm: true,
+        block_idx
+      },
+      stim_id: "nogo_error_feedback"
+    });
+    feedbackUnit.show({ duration: Number(settings.nogo_error_feedback_duration ?? 0.8) }).to_dict();
   }
 
   trial.finalize((snapshot, _runtime, helpers) => {
